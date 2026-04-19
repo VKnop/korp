@@ -50,16 +50,7 @@ func (p *productController) CreateProduct(ctx *gin.Context) {
 
 func (p *productController) EditProduct(ctx *gin.Context) {
 
-	param := ctx.Param("id")
-	if param == "" {
-		response := model.Response{
-			Message: "Id do produto não pode ser nulo",
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
-	}
-
-	id, er := strconv.Atoi(param)
+	id, er := strconv.Atoi(ctx.Param("id"))
 	if er != nil {
 		response := model.Response{
 			Message: "Id do produto precisa ser um numero",
@@ -80,6 +71,11 @@ func (p *productController) EditProduct(ctx *gin.Context) {
 
 	if errr != nil {
 		ctx.JSON(http.StatusInternalServerError, errr)
+		return
+	}
+
+	if changedProduct == (model.Product{}) {
+		ctx.JSON(http.StatusBadRequest, "Produto não existe")
 		return
 	}
 

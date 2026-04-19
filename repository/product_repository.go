@@ -96,4 +96,5 @@ func (pr *ProductRepository) EditProduct(id int, product model.Product) (model.P
 	query.Close()
 
 	return newProduct, nil
+
 }
