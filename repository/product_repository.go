@@ -77,9 +77,6 @@ func (pr *ProductRepository) EditProduct(id int, product model.Product) (model.P
 		return model.Product{}, err
 	}
 
-	fmt.Println(query)
-	fmt.Println(product.CODE, product.DESCRIPTION, product.BALANCE, id)
-
 	err = query.QueryRow(product.CODE, product.DESCRIPTION, product.BALANCE, id).Scan(&id)
 
 	if err != nil {
