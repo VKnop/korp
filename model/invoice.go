@@ -3,8 +3,8 @@ package model
 type valid_status int
 
 const (
-	Aberta  valid_status = iota // 0
-	Fechada                     // 1
+	Aberta valid_status = iota
+	Fechada
 )
 
 func (s valid_status) String() string {
