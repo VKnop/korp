@@ -68,3 +68,35 @@ func (pr *ProductRepository) CreateProduct(product model.Product) (int, error) {
 	query.Close()
 	return id, nil
 }
+
+func (pr *ProductRepository) EditProduct(id int, product model.Product) (model.Product, error) {
+
+	query, err := pr.connection.Prepare("UPDATE products SET code = $1, description = $2, balance = $3 WHERE id = $4 RETURNING id")
+	if err != nil {
+		fmt.Println(err)
+		return model.Product{}, err
+	}
+
+	fmt.Println(query)
+	fmt.Println(product.CODE, product.DESCRIPTION, product.BALANCE, id)
+
+	err = query.QueryRow(product.CODE, product.DESCRIPTION, product.BALANCE, id).Scan(&id)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.Product{}, nil
+		}
+
+		return model.Product{}, err
+	}
+
+	newProduct := model.Product{
+		ID:          id,
+		CODE:        product.CODE,
+		DESCRIPTION: product.DESCRIPTION,
+		BALANCE:     product.BALANCE}
+
+	query.Close()
+
+	return newProduct, nil
+}
