@@ -33,6 +33,7 @@ func main() {
 	})
 
 	service.GET("/products", productController.GetProducts)
+	service.GET("/product/:id", productController.GetProductById)
 	service.POST("/product", productController.CreateProduct)
 	service.PUT("/product/:id", productController.EditProduct)
 

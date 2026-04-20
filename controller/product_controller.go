@@ -29,6 +29,34 @@ func (p *productController) GetProducts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, products)
 }
 
+func (p *productController) GetProductById(ctx *gin.Context) {
+
+	id, er := strconv.Atoi(ctx.Param("id"))
+	if er != nil {
+		response := model.Response{
+			Message: "Id do produto precisa ser um numero",
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	product, err := p.productUseCase.GetProductById(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if product == nil {
+		response := model.Response{
+			Message: "Produto não foi encontrado na base de dados",
+		}
+		ctx.JSON(http.StatusNotFound, response)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, product)
+}
+
 func (p *productController) CreateProduct(ctx *gin.Context) {
 
 	var product model.Product
@@ -75,7 +103,7 @@ func (p *productController) EditProduct(ctx *gin.Context) {
 	}
 
 	if changedProduct == (model.Product{}) {
-		ctx.JSON(http.StatusBadRequest, "Produto não existe")
+		ctx.JSON(http.StatusBadRequest, "Produto não foi encontrado na base de dados")
 		return
 	}
 
